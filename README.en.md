@@ -15,7 +15,7 @@ Live speech translation and bilingual subtitles for macOS. Calls, meetings, anyt
 
 </div>
 
-LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. Use it to translate iPhone calls, video meetings and any app's audio live; it needs macOS 27 or later on Apple Silicon. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (qwen3.8 LiveTranslate), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
+LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. Use it to translate iPhone calls, video meetings and any app's audio live; it needs macOS 27 or later on Apple Silicon. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (`qwen3.8-livetranslate-flash-realtime`), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
 
 For example: the other person speaks English, you read and hear Chinese; you speak Chinese, they hear English.
 

@@ -15,7 +15,7 @@ macOS 实时语音翻译与双语字幕工具，适用于通话、会议和任�
 
 </div>
 
-LiveTranslate Bridge 是免费开源（MIT）的 macOS 实时语音翻译与双语字幕工具，可用于 iPhone 来电、视频会议和任意 App 的同声传译，仅支持 macOS 27 及以上的 Apple Silicon Mac。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（qwen3.8 LiveTranslate）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
+LiveTranslate Bridge 是免费开源（MIT）的 macOS 实时语音翻译与双语字幕工具，可用于 iPhone 来电、视频会议和任意 App 的同声传译，仅支持 macOS 27 及以上的 Apple Silicon Mac。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（`qwen3.8-livetranslate-flash-realtime`）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
 
 典型场景：对方说英语，你看到中文字幕、听到中文译声；你说中文，对方听到英语译声。
 

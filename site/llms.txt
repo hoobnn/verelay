@@ -1,6 +1,6 @@
 # LiveTranslate Bridge
 
-> LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) plus your microphone, sends it to Alibaba Cloud's Qwen LiveTranslate model (or Volcengine Doubao simultaneous interpretation) under your own account, and shows two-way subtitles, optionally speaking the translation. LiveTranslate Bridge 是免费开源的 macOS 实时语音翻译与双语字幕工具。
+> LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) plus your microphone, sends it to Alibaba Cloud's Qwen LiveTranslate model (`qwen3.8-livetranslate-flash-realtime`, or Volcengine Doubao simultaneous interpretation) under your own account, and shows two-way subtitles, optionally speaking the translation. LiveTranslate Bridge 是免费开源的 macOS 实时语音翻译与双语字幕工具。
 
 Key facts:
 
