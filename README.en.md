@@ -15,7 +15,7 @@ Live speech translation and bilingual subtitles for macOS. Calls, meetings, anyt
 
 </div>
 
-LiveTranslate Bridge is an open-source macOS app. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (qwen3.8 LiveTranslate), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
+LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. Use it to translate iPhone calls, video meetings and any app's audio live; it needs macOS 27 or later on Apple Silicon. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (qwen3.8 LiveTranslate), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
 
 For example: the other person speaks English, you read and hear Chinese; you speak Chinese, they hear English.
 
@@ -121,6 +121,15 @@ Translated speech is 1–3 seconds behind the original and speeds up when it fal
 
 **Is it free?**
 The app is free and open source. Translation is billed to your own Model Studio account at the model's standard rates. Pausing on silence and requesting text only both cut usage.
+
+**Which account do I need? Does it work offline?**
+You need your own Alibaba Cloud Model Studio (or Volcengine Doubao Speech) account; enter the API key in Settings and it is kept in your login keychain. Audio is sent to the selected cloud service for translation, so an internet connection is required and offline use isn't possible.
+
+**Which languages are supported?**
+Chinese, English, Japanese, Korean, French, German, Spanish and Russian, picked separately for each side. With Doubao simultaneous interpretation, Korean and Russian are not supported, and one side must be Chinese or English.
+
+**How do I uninstall it? Where is my data?**
+`brew uninstall --cask livetranslate-bridge`, or delete the app from Applications. Session history lives in `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`; delete it from the History page or remove that folder by hand. API keys are in your login keychain.
 
 **Intel Macs or older macOS?**
 No. It needs macOS 27 or later and only ships for Apple Silicon.

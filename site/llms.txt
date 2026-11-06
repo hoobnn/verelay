@@ -1,0 +1,29 @@
+# LiveTranslate Bridge
+
+> LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) plus your microphone, sends it to Alibaba Cloud's Qwen LiveTranslate model (or Volcengine Doubao simultaneous interpretation) under your own account, and shows two-way subtitles, optionally speaking the translation. LiveTranslate Bridge 是免费开源的 macOS 实时语音翻译与双语字幕工具。
+
+Key facts:
+
+- Website: https://hoobnn.github.io/livetranslate-bridge/
+- Source code: https://github.com/hoobnn/livetranslate-bridge
+- Download: https://github.com/hoobnn/livetranslate-bridge/releases/latest (signed and notarized DMG, auto-updates via Sparkle)
+- Install: `brew install --cask hoobnn/tap/livetranslate-bridge`
+- Requirements: macOS 27 or later, Apple Silicon only. Needs an internet connection.
+- Price: the app is free (MIT). Translation is billed by your own Alibaba Cloud Model Studio (or Volcengine Doubao Speech) account.
+- Languages: Chinese, English, Japanese, Korean, French, German, Spanish, Russian, chosen per side (Doubao mode: no Korean or Russian, one side must be Chinese or English).
+- Use cases: iPhone calls on Mac (Continuity), cross-language video meetings (per-app capture, loopback device such as BlackHole to send translated voice into a meeting), foreign-language streams and lectures, plain transcription with Markdown / Word export.
+- Data: subtitle history is stored locally; audio is not recorded unless "Also save audio recordings" is turned on; API keys are kept in the login keychain.
+- Not sandboxed, so not on the Mac App Store. No echo cancellation: use headphones or a loopback output.
+- Author: hoobnn (https://github.com/hoobnn, https://www.ikuyu.com)
+
+## Docs
+
+- [README (简体中文)](https://raw.githubusercontent.com/hoobnn/livetranslate-bridge/main/README.md): features, install, first-time setup, Doubao mode, AI agent, FAQ, known limits
+- [README (English)](https://raw.githubusercontent.com/hoobnn/livetranslate-bridge/main/README.en.md): the same in English
+- [Changelog](https://raw.githubusercontent.com/hoobnn/livetranslate-bridge/main/CHANGELOG.md): release notes
+- [接力通话音频实测 Call audio findings](https://raw.githubusercontent.com/hoobnn/livetranslate-bridge/main/docs/findings.md): how Continuity call audio is captured (Chinese)
+
+## Optional
+
+- [Releases](https://github.com/hoobnn/livetranslate-bridge/releases): all versions
+- [Issues](https://github.com/hoobnn/livetranslate-bridge/issues): bug reports and feedback

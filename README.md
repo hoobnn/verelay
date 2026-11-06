@@ -15,7 +15,7 @@ macOS 实时语音翻译与双语字幕工具，适用于通话、会议和任�
 
 </div>
 
-LiveTranslate Bridge 是一款开源的 macOS App。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（qwen3.8 LiveTranslate）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
+LiveTranslate Bridge 是免费开源（MIT）的 macOS 实时语音翻译与双语字幕工具，可用于 iPhone 来电、视频会议和任意 App 的同声传译，仅支持 macOS 27 及以上的 Apple Silicon Mac。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（qwen3.8 LiveTranslate）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
 
 典型场景：对方说英语，你看到中文字幕、听到中文译声；你说中文，对方听到英语译声。
 
@@ -121,6 +121,15 @@ App 通过 [Sparkle](https://sparkle-project.org/) 自动检查新版本，发�
 
 **收费吗？**
 App 免费开源。翻译费用由你自己的百炼账号按模型标准价格结算。静音时暂停上传、只请求文字结果，都可以节省用量。
+
+**需要什么账号？能离线用吗？**
+需要你自己的阿里云百炼（或火山引擎豆包语音）账号，在设置里填 API Key，凭据保存在登录钥匙串。音频要发送到所选的云端服务做翻译，所以必须联网，不能离线使用。
+
+**支持哪些语言？**
+中文、英语、日语、韩语、法语、德语、西班牙语、俄语，两侧可分别选择。改用豆包同声传译时不支持韩语和俄语，且其中一方须为中文或英语。
+
+**怎么卸载？数据在哪里？**
+`brew uninstall --cask livetranslate-bridge`，或直接从「应用程序」删除。会话历史保存在 `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`，可在 App 的「历史」页删除，或手动删除该目录；API Key 在登录钥匙串里。
 
 **支持 Intel Mac 或旧版 macOS 吗？**
 不支持。目前仅支持 macOS 27 及以上的 Apple Silicon Mac。
