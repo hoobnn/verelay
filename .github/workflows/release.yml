@@ -27,17 +27,17 @@ jobs:
       contents: write
     uses: hoobnn/ci-workflows/.github/workflows/macos-release.yml@v1
     with:
-      app-path: dist/LiveTranslateBridge.app
+      app-path: dist/Verelay.app
       build-command: ./scripts/build-app.sh
-      artifact-basename: LiveTranslateBridge
-      entitlements: LiveTranslateBridge/LiveTranslateBridge.entitlements
+      artifact-basename: Verelay
+      entitlements: Verelay/Verelay.entitlements
       # 自动找出 Sparkle 的嵌套代码（Autoupdate、Updater.app 和 framework），由内向外先签，
       # 升级 Sparkle 不用再改清单；XPCServices 已在 build-app.sh 中去掉。
       inner-binaries: auto
       # 给 zip 做 EdDSA 签名并发布 .zip.sparkle.json，供 appcast 使用。
       sparkle: true
       make-dmg: true
-      dmg-volume-name: LiveTranslate Bridge
+      dmg-volume-name: Verelay
       # Release 说明取自 docs/releases/<标签>.md，与 CHANGELOG 同步维护；
       # 缺失时回退为 GitHub 自动生成。只在首次创建 Release 时生效。
       release-notes-file: docs/releases/${{ github.ref_name }}.md
@@ -49,8 +49,8 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     uses: hoobnn/ci-workflows/.github/workflows/homebrew-cask.yml@v1
     with:
-      cask: livetranslate-bridge
-      artifact-basename: LiveTranslateBridge
+      cask: verelay
+      artifact-basename: Verelay
       version: ${{ needs.release.outputs.version }}
     secrets: inherit
 

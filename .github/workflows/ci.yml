@@ -34,12 +34,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Check update feed compatibility
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+
       - name: 🧪 Unit tests
         run: |
           set -euo pipefail
           xcodebuild test \
-            -project LiveTranslateBridge.xcodeproj \
-            -scheme LiveTranslateBridge \
+            -project Verelay.xcodeproj \
+            -scheme Verelay \
             -destination 'platform=macOS' \
-            -only-testing:LiveTranslateBridgeTests \
+            -only-testing:VerelayTests \
             CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=

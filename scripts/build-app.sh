@@ -6,8 +6,8 @@ cd "$(dirname "$0")/.."
 DERIVED=build/DerivedData.noindex
 rm -rf dist
 xcodebuild \
-  -project LiveTranslateBridge.xcodeproj \
-  -scheme LiveTranslateBridge \
+  -project Verelay.xcodeproj \
+  -scheme Verelay \
   -configuration Release \
   -derivedDataPath "$DERIVED" \
   CODE_SIGNING_ALLOWED=NO \
@@ -16,11 +16,11 @@ xcodebuild \
 # xcodebuild 会把产物登记到 Launch Services；它与正式版同 bundle ID，
 # 留着会让 brew 升级后按 ID 重开时打开这份中间产物。
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
-  -u "$DERIVED/Build/Products/Release/LiveTranslateBridge.app" 2>/dev/null || true
+  -u "$DERIVED/Build/Products/Release/Verelay.app" 2>/dev/null || true
 
 mkdir -p dist
-APP=dist/LiveTranslateBridge.app
-ditto "$DERIVED/Build/Products/Release/LiveTranslateBridge.app" "$APP"
+APP=dist/Verelay.app
+ditto "$DERIVED/Build/Products/Release/Verelay.app" "$APP"
 
 # Sparkle 的 XPC 服务只有沙盒 App 才用得上，本 App 未开沙盒。CI 重签名时
 # 也保不住 Downloader.xpc 自带的 entitlements，所以直接去掉，由 Sparkle

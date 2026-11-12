@@ -1,13 +1,13 @@
 <div align="center">
 
-<img src="LiveTranslateBridge/Assets.xcassets/AppIcon.appiconset/AppIcon-256.png" width="112" alt="LiveTranslate Bridge app icon">
+<img src="Verelay/Assets.xcassets/VerelayIcon.appiconset/VerelayIcon-256.png" width="112" alt="Verelay app icon">
 
-# LiveTranslate Bridge
+# Verelay
 
 Live speech translation and bilingual subtitles for macOS. Calls, meetings, anything playing in a browser — translated while you listen.
 
-[![Release](https://img.shields.io/github/v/release/hoobnn/livetranslate-bridge?style=flat-square)](https://github.com/hoobnn/livetranslate-bridge/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/hoobnn/livetranslate-bridge/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/hoobnn/livetranslate-bridge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/hoobnn/verelay?style=flat-square)](https://github.com/hoobnn/verelay/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/hoobnn/verelay/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/hoobnn/verelay/actions/workflows/ci.yml)
 [![macOS](https://img.shields.io/badge/macOS-27%2B-black?style=flat-square&logo=apple)](https://www.apple.com/macos/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
@@ -15,13 +15,13 @@ Live speech translation and bilingual subtitles for macOS. Calls, meetings, anyt
 
 </div>
 
-LiveTranslate Bridge is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. Use it to translate iPhone calls, video meetings and any app's audio live; it needs macOS 27 or later on Apple Silicon. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (`qwen3.8-livetranslate-flash-realtime`), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
+Verelay is a free, open-source (MIT) macOS app for real-time speech translation and bilingual subtitles. Use it to translate iPhone calls, video meetings and any app's audio live; it needs macOS 27 or later on Apple Silicon. It captures one app's audio (an iPhone call answered on your Mac, a video meeting, a browser, a media player) along with your microphone, sends both to Alibaba Cloud's Qwen real-time translation model (`qwen3.8-livetranslate-flash-realtime`), and gives you subtitles in both directions, plus spoken translations if you want them. Original and translated audio go to the output devices you pick, each at its own volume.
 
 For example: the other person speaks English, you read and hear Chinese; you speak Chinese, they hear English.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/product/app-subtitles-dark.jpg">
-  <img src="docs/assets/product/app-subtitles-light.jpg" alt="LiveTranslate Bridge macOS live translation window with Chinese and English two-way subtitles in side-by-side columns">
+  <img src="docs/assets/product/app-subtitles-light.jpg" alt="Verelay macOS live translation window with Chinese and English two-way subtitles in side-by-side columns">
 </picture>
 
 <sub>This is the app's built-in sample subtitle preview, not a real call. It follows GitHub's light/dark theme.</sub>
@@ -59,14 +59,20 @@ Requires macOS 27 or later on Apple Silicon.
 With Homebrew:
 
 ```bash
-brew install --cask hoobnn/tap/livetranslate-bridge
+brew install --cask hoobnn/tap/verelay
 ```
 
-Or download the DMG from [GitHub Releases](https://github.com/hoobnn/livetranslate-bridge/releases/latest). It's signed and notarized by Apple.
+Or download the DMG from [GitHub Releases](https://github.com/hoobnn/verelay/releases/latest). It's signed and notarized by Apple.
 
 ### Updating
 
-The app checks for new versions with [Sparkle](https://sparkle-project.org/) and offers to install them. You can also check by hand with Check for Updates… in the app menu, or turn automatic checks off in Settings › General › Updates. Updates are installed only after their EdDSA signature is verified. 1.0.0 predates this, so update it once by hand (`brew upgrade --cask livetranslate-bridge` or a fresh DMG).
+The app checks for new versions with [Sparkle](https://sparkle-project.org/) and offers to install them. You can also check by hand with Check for Updates… in the app menu, or turn automatic checks off in Settings › General › Updates. Updates are installed only after their EdDSA signature is verified. 1.0.0 predates this, so update it once by hand (`brew upgrade --cask verelay` or a fresh DMG).
+
+### Upgrading from LiveTranslate Bridge
+
+The app is now called Verelay. Its bundle identifier and keychain service names stay the same, so existing settings, API keys, session history and recordings remain available. The history directory is still `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`. The old update feed remains available for existing installations.
+
+Homebrew users can run `brew update` followed by `brew upgrade --cask verelay`; the tap migrates the old cask name.
 
 ## First run
 
@@ -105,7 +111,7 @@ You need a loopback audio device such as [BlackHole](https://existential.audio/b
 
 1. Set the "What others hear" output to the loopback device.
 2. In the meeting or call app, set the input to the same loopback device.
-3. Keep a real microphone as LiveTranslate Bridge's input. Otherwise the app picks up its own translated voice.
+3. Keep a real microphone as Verelay's input. Otherwise the app picks up its own translated voice.
 4. To have the other side hear only the translation and never your original voice, set the original volume for "What others hear" to 0 and turn on voice cloning: they hear the translation in your voice.
 
 ## FAQ
@@ -129,7 +135,7 @@ You need your own Alibaba Cloud Model Studio (or Volcengine Doubao Speech) accou
 Chinese, English, Japanese, Korean, French, German, Spanish and Russian, picked separately for each side. With Doubao simultaneous interpretation, Korean and Russian are not supported, and one side must be Chinese or English.
 
 **How do I uninstall it? Where is my data?**
-`brew uninstall --cask livetranslate-bridge`, or delete the app from Applications. Session history lives in `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`; delete it from the History page or remove that folder by hand. API keys are in your login keychain.
+`brew uninstall --cask verelay`, or delete the app from Applications. Session history lives in `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`; delete it from the History page or remove that folder by hand. API keys are in your login keychain.
 
 **Intel Macs or older macOS?**
 No. It needs macOS 27 or later and only ships for Apple Silicon.
@@ -146,8 +152,8 @@ No. It needs macOS 27 or later and only ships for Apple Silicon.
 Requires Xcode 27.
 
 ```bash
-open LiveTranslateBridge.xcodeproj    # run from Xcode
-./scripts/build-app.sh                # or build an unsigned dist/LiveTranslateBridge.app from the command line
+open Verelay.xcodeproj    # run from Xcode
+./scripts/build-app.sh                # or build an unsigned dist/Verelay.app from the command line
 ```
 
 When debugging, the environment variables `DASHSCOPE_API_KEY` / `DASHSCOPE_WORKSPACE_ID` override the credentials in the keychain.
@@ -156,7 +162,7 @@ When debugging, the environment variables `DASHSCOPE_API_KEY` / `DASHSCOPE_WORKS
 
 Pushes to main and pull requests only run unit tests (`.github/workflows/ci.yml`). Pushing a `v*` tag runs `.github/workflows/release.yml`: the same tests, then build, Developer ID signing, notarization, the GitHub Release and a Homebrew tap update. The tag version has to match `MARKETING_VERSION` in the project.
 
-The appcast for in-app updates isn't committed. During a release CI signs the zip with the repository secret `SPARKLE_ED_PRIVATE_KEY` and attaches a `.zip.sparkle.json` to the Release, then redeploys GitHub Pages (`.github/workflows/pages.yml`), which builds `https://hoobnn.github.io/livetranslate-bridge/appcast.xml` from all Releases. Deleting a Release removes its entry too.
+The appcast for in-app updates isn't committed. During a release CI signs the zip with the repository secret `SPARKLE_ED_PRIVATE_KEY` and attaches a `.zip.sparkle.json` to the Release, then redeploys GitHub Pages (`.github/workflows/pages.yml`), which builds `https://hoobnn.github.io/verelay/appcast.xml` from all Releases. Deleting a Release removes its entry too.
 
 ## Docs
 

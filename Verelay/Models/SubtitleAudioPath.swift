@@ -1,0 +1,237 @@
+import os
+import AVFoundation
+import Foundation
+
+/// The capture → resample → socket hop, which is the one part of the subtitle
+/// pipeline that never touches the main actor.
+///
+/// Split out of `SubtitleModel` because it is the half with entirely different
+/// rules: the IO thread only publishes into a preallocated lock-free ring;
+/// conversion, metrics, logging and network work happen on its worker. Keeping
+/// it beside the observable state invited edits written for the main actor.
+extension SubtitleModel {
+    /// The client and lazily-built resampler, confined to the worker queue.
+    ///
+    /// Internal rather than private for the same reason as `Defaults`: the
+    /// model that owns it is now in another file.
+    nonisolated final class AudioPath: @unchecked Sendable {
+        private let direction: Direction
+        private var client: (any LiveTranslationSession)?
+        private var pcmObserver: (@Sendable (Data) -> Void)?
+        private var resampler: Resampler?
+        private var sourceFormat: AVAudioFormat?
+        /// Converted PCM not yet long enough to make a chunk.
+        private var staged = Data()
+        private var gate: SilenceGate?
+        /// Set apart from the client: an internal restart reinstalls the
+        /// client, but the recording carries on under the same session.
+        private var recorder: SessionRecorder?
+        private let queue: RealtimeAudioQueue
+        private let callback: Callback
+
+        private final class Callback: @unchecked Sendable {
+            weak var owner: AudioPath?
+        }
+
+        init(direction: Direction) {
+            self.direction = direction
+            gate = Self.makeGate(direction: direction, gatesMicrophone: false)
+            let callback = Callback()
+            self.callback = callback
+            queue = RealtimeAudioQueue(
+                label: "com.ikuyu.verelay.audio.\(direction.rawValue)"
+            ) { [weak callback] buffer in
+                callback?.owner?.process(buffer)
+            } onDrop: { [weak callback] count in
+                callback?.owner?.report(
+                    dropped: "realtime queue full or unsupported (\(count) buffers)"
+                )
+            }
+            callback.owner = self
+        }
+
+        /// `gatesMicrophone` also stops the microphone's upload through long
+        /// silences. The far end is always gated, but only on exact digital
+        /// silence, which cannot cost a word.
+        func install(client: (any LiveTranslationSession)?, gatesMicrophone: Bool = false) {
+            queue.invalidate()
+            queue.perform { [weak self] in
+                guard let self else { return }
+                self.client = client
+                self.staged.removeAll(keepingCapacity: true)
+                self.gate = Self.makeGate(
+                    direction: self.direction, gatesMicrophone: gatesMicrophone
+                )
+                if client == nil { self.resampler = nil; self.sourceFormat = nil }
+            }
+        }
+
+        /// Starts or, with nil, stops handing converted audio to `recorder`.
+        func record(into recorder: SessionRecorder?) {
+            queue.perform { [weak self] in self?.recorder = recorder }
+        }
+
+        /// Realtime conversational VAD needs the quiet spans as well as speech.
+        /// This tap receives converted PCM before the translation silence gate.
+        func observePCM(_ observer: (@Sendable (Data) -> Void)?) {
+            queue.perform { [weak self] in self?.pcmObserver = observer }
+        }
+
+        private static func makeGate(direction: Direction, gatesMicrophone: Bool) -> SilenceGate? {
+            switch direction {
+            case .remote: return .digitalSilence()
+            case .local: return gatesMicrophone ? .microphone() : nil
+            }
+        }
+
+        func enqueue(_ buffer: CapturedAudio) { queue.enqueue(buffer) }
+
+        #if DEBUG
+        /// Feeds a buffer through the same ring the IO thread publishes to.
+        func enqueueForTesting(_ buffer: AVAudioPCMBuffer) { queue.enqueue(buffer) }
+
+        /// Returns once everything enqueued so far has been processed.
+        func drainForTesting() {
+            let done = DispatchSemaphore(value: 0)
+            queue.perform { done.signal() }
+            done.wait()
+        }
+        #endif
+
+        private func process(_ buffer: AVAudioPCMBuffer) {
+            if resampler == nil || sourceFormat != buffer.format {
+                sourceFormat = buffer.format
+                resampler = try? Resampler(sourceFormat: buffer.format)
+                if resampler == nil { BridgeLog.audio.error("resampler could not be built") }
+            }
+            guard let resampler else { return }
+            guard client != nil || recorder != nil || pcmObserver != nil else {
+                report(dropped: "no client installed")
+                return
+            }
+            guard let pcm = try? resampler.convert(buffer), !pcm.isEmpty else {
+                report(dropped: "conversion produced no bytes")
+                return
+            }
+            // Before the silence gate, which would cut the quiet stretches
+            // out of the recording's timeline.
+            recorder?.append(pcm, to: .original(direction))
+            pcmObserver?(pcm)
+            guard let client else { return }
+            report(sent: pcm)
+            stage(pcm, to: client)
+        }
+
+        /// Regroups the converted PCM into `Self.chunkBytes` chunks and passes
+        /// each through the silence gate.
+        ///
+        /// Both capture sides deliver IO-sized buffers (~10 ms). Sent as they
+        /// came, that was ~94 JSON + Base64 frames a second per direction,
+        /// each with its own completion hop; four of them to a frame is a
+        /// quarter of the frames for at most 30 ms of added wait.
+        private func stage(_ pcm: Data, to client: any LiveTranslationSession) {
+            staged.append(pcm)
+            while staged.count >= Self.chunkBytes {
+                // A standalone `Data`, not a slice: a chunk held back behind
+                // the handshake or across a reconnect would otherwise keep
+                // the staging buffer alive for as long as it is queued.
+                let chunk = Data(staged.prefix(Self.chunkBytes))
+                staged.removeFirst(Self.chunkBytes)
+                guard gate != nil else {
+                    client.sendAudio(chunk)
+                    continue
+                }
+                let wasOpen = gate!.isOpen
+                let released = gate!.admit(chunk)
+                if wasOpen != gate!.isOpen {
+                    BridgeLog.audio.notice(
+                        "[\(self.direction.rawValue, privacy: .public)] upload \(wasOpen ? "paused after sustained silence" : "resumed with \(released.count - 1) pre-roll chunks", privacy: .public)"
+                    )
+                }
+                for part in released { client.sendAudio(part) }
+            }
+        }
+
+        /// 40 ms of 16 kHz mono Int16 per append.
+        private static let chunkBytes = Int(Resampler.targetSampleRate)
+            / 25 * MemoryLayout<Int16>.size
+
+        /// One line a second rather than one per buffer: at 48 kHz the IO
+        /// thread can publish hundreds of times a second, and logging each one
+        /// would flood the log and starve the worker.
+        private var sentBuffers = 0
+        private var peakSample = 0
+        private var sentBytes = 0
+        private var lastReport: ContinuousClock.Instant = .now
+
+        /// Set on the first report so the opening line is not suppressed by a
+        /// clock that starts "already a second ago".
+        private var didReport = false
+
+        private func report(sent pcm: Data) {
+            // Byte count alone cannot tell a live call from digital silence,
+            // and silence is indistinguishable from a broken tap at the
+            // server: VAD simply never fires. Track the peak so the log says
+            // which one this is.
+            //
+            // Strided rather than exhaustive: this runs on the audio worker
+            // for every buffer, and the peak is only ever read back as
+            // a log line saying "live call" or "digital silence". Every 16th
+            // sample at 16 kHz is still a thousand points a second — far more
+            // than that distinction needs — for a sixteenth of the work.
+            let peak = pcm.withUnsafeBytes { raw -> Int in
+                let samples = raw.bindMemory(to: Int16.self)
+                var loudest: Int32 = 0
+                for index in stride(from: 0, to: samples.count, by: 16) {
+                    // `Int32` because `abs(Int16.min)` overflows Int16.
+                    let magnitude = abs(Int32(samples[index]))
+                    if magnitude > loudest { loudest = magnitude }
+                }
+                return Int(loudest)
+            }
+
+            sentBuffers += 1
+            sentBytes += pcm.count
+            peakSample = max(peakSample, peak)
+            // `ContinuousClock` rather than `Date`: this is elapsed time and
+            // wall-clock adjustments must not stall or spam the line.
+            let now = ContinuousClock.now
+            guard !didReport || now - lastReport >= .seconds(1) else {
+                return
+            }
+            didReport = true
+            let buffers = sentBuffers, bytes = sentBytes
+            let loudest = peakSample
+            lastReport = now
+            sentBuffers = 0
+            sentBytes = 0
+            peakSample = 0
+
+            // Signal level only. A PCM peak does not reveal the service's
+            // VAD classification or the duration of speech/silence.
+            let dbfs = loudest > 0
+                ? 20 * log10(Double(loudest) / 32767.0) : -Double.infinity
+            let side = direction.rawValue
+            BridgeLog.audio.notice(
+                "[\(side, privacy: .public)] peak \(loudest, privacy: .public) (\(String(format: "%.1f", dbfs), privacy: .public) dBFS)\(loudest < 1000 ? " — near silence; check input level" : "", privacy: .public)"
+            )
+            // "handed to the client", not "sent": the client may still be
+            // queueing these behind an unfinished handshake.
+            BridgeLog.audio.info(
+                "[\(side, privacy: .public)] resampled \(buffers, privacy: .public) buffers / \(bytes, privacy: .public) bytes of 16k PCM in the last second"
+            )
+        }
+
+        private func report(dropped reason: String) {
+            let now = ContinuousClock.now
+            guard !didReport || now - lastReport >= .seconds(1) else {
+                return
+            }
+            didReport = true
+            lastReport = now
+            BridgeLog.audio.error(
+                "[\(self.direction.rawValue, privacy: .public)] dropping tap audio: \(reason, privacy: .public)"
+            )
+        }
+    }
+}

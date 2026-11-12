@@ -1,13 +1,13 @@
 <div align="center">
 
-<img src="LiveTranslateBridge/Assets.xcassets/AppIcon.appiconset/AppIcon-256.png" width="112" alt="LiveTranslate Bridge 应用图标">
+<img src="Verelay/Assets.xcassets/VerelayIcon.appiconset/VerelayIcon-256.png" width="112" alt="Verelay 应用图标">
 
-# LiveTranslate Bridge
+# Verelay
 
 macOS 实时语音翻译与双语字幕工具，适用于通话、会议和任意 App 的音频。
 
-[![Release](https://img.shields.io/github/v/release/hoobnn/livetranslate-bridge?style=flat-square)](https://github.com/hoobnn/livetranslate-bridge/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/hoobnn/livetranslate-bridge/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/hoobnn/livetranslate-bridge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/hoobnn/verelay?style=flat-square)](https://github.com/hoobnn/verelay/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/hoobnn/verelay/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/hoobnn/verelay/actions/workflows/ci.yml)
 [![macOS](https://img.shields.io/badge/macOS-27%2B-black?style=flat-square&logo=apple)](https://www.apple.com/macos/)
 [![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
 
@@ -15,13 +15,13 @@ macOS 实时语音翻译与双语字幕工具，适用于通话、会议和任�
 
 </div>
 
-LiveTranslate Bridge 是免费开源（MIT）的 macOS 实时语音翻译与双语字幕工具，可用于 iPhone 来电、视频会议和任意 App 的同声传译，仅支持 macOS 27 及以上的 Apple Silicon Mac。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（`qwen3.8-livetranslate-flash-realtime`）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
+Verelay 是免费开源（MIT）的 macOS 实时语音翻译与双语字幕工具，可用于 iPhone 来电、视频会议和任意 App 的同声传译，仅支持 macOS 27 及以上的 Apple Silicon Mac。它同时采集指定应用的声音（在 Mac 上接听的 iPhone 来电、视频会议、浏览器、播放器）和麦克风，通过阿里云百炼的 Qwen 实时翻译模型（`qwen3.8-livetranslate-flash-realtime`）生成双向字幕，并可将译文语音播报。原声和译声分别输出到指定设备，音量独立调节。
 
 典型场景：对方说英语，你看到中文字幕、听到中文译声；你说中文，对方听到英语译声。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/assets/product/app-subtitles-dark.jpg">
-  <img src="docs/assets/product/app-subtitles-light.jpg" alt="LiveTranslate Bridge macOS 实时翻译界面：中英文双向字幕左右分栏显示">
+  <img src="docs/assets/product/app-subtitles-light.jpg" alt="Verelay macOS 实时翻译界面：中英文双向字幕左右分栏显示">
 </picture>
 
 <sub>截图为 App 内置的示例字幕，并非真实通话，会随 GitHub 的深浅色主题切换。</sub>
@@ -59,14 +59,20 @@ LiveTranslate Bridge 是免费开源（MIT）的 macOS 实时语音翻译与双�
 用 Homebrew 安装：
 
 ```bash
-brew install --cask hoobnn/tap/livetranslate-bridge
+brew install --cask hoobnn/tap/verelay
 ```
 
-也可以从 [GitHub Releases](https://github.com/hoobnn/livetranslate-bridge/releases/latest) 下载 DMG，安装包已签名并通过 Apple 公证。
+也可以从 [GitHub Releases](https://github.com/hoobnn/verelay/releases/latest) 下载 DMG，安装包已签名并通过 Apple 公证。
 
 ### 更新
 
-App 通过 [Sparkle](https://sparkle-project.org/) 自动检查新版本，发现后提示安装；也可以在应用菜单中选「检查更新…」手动检查，或在「设置 › 通用 › 更新」关闭自动检查。更新包经 EdDSA 签名校验后才会安装。1.0.0 还没有这项功能，需要手动更新一次（`brew upgrade --cask livetranslate-bridge` 或重新下载 DMG）。
+App 通过 [Sparkle](https://sparkle-project.org/) 自动检查新版本，发现后提示安装；也可以在应用菜单中选「检查更新…」手动检查，或在「设置 › 通用 › 更新」关闭自动检查。更新包经 EdDSA 签名校验后才会安装。1.0.0 还没有这项功能，需要手动更新一次（`brew upgrade --cask verelay` 或重新下载 DMG）。
+
+### 从 LiveTranslate Bridge 升级
+
+产品现已更名为 Verelay。应用继续使用原 bundle ID 与钥匙串服务名，因此设置、API Key、会话历史和录音继续可用。历史数据目录仍为 `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`。旧版应用的更新入口保留兼容更新源。
+
+Homebrew 用户先执行 `brew update`，再执行 `brew upgrade --cask verelay`；tap 会迁移旧包名。
 
 ## 首次使用
 
@@ -129,7 +135,7 @@ App 免费开源。翻译费用由你自己的百炼账号按模型标准价格�
 中文、英语、日语、韩语、法语、德语、西班牙语、俄语，两侧可分别选择。改用豆包同声传译时不支持韩语和俄语，且其中一方须为中文或英语。
 
 **怎么卸载？数据在哪里？**
-`brew uninstall --cask livetranslate-bridge`，或直接从「应用程序」删除。会话历史保存在 `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`，可在 App 的「历史」页删除，或手动删除该目录；API Key 在登录钥匙串里。
+`brew uninstall --cask verelay`，或直接从「应用程序」删除。会话历史保存在 `~/Library/Application Support/com.ikuyu.livetranslate-bridge/Sessions`，可在 App 的「历史」页删除，或手动删除该目录；API Key 在登录钥匙串里。
 
 **支持 Intel Mac 或旧版 macOS 吗？**
 不支持。目前仅支持 macOS 27 及以上的 Apple Silicon Mac。
@@ -146,8 +152,8 @@ App 免费开源。翻译费用由你自己的百炼账号按模型标准价格�
 需要 Xcode 27。
 
 ```bash
-open LiveTranslateBridge.xcodeproj    # 在 Xcode 里运行
-./scripts/build-app.sh                # 或在命令行构建未签名的 dist/LiveTranslateBridge.app
+open Verelay.xcodeproj    # 在 Xcode 里运行
+./scripts/build-app.sh                # 或在命令行构建未签名的 dist/Verelay.app
 ```
 
 调试时可以用环境变量 `DASHSCOPE_API_KEY` / `DASHSCOPE_WORKSPACE_ID` 覆盖钥匙串里的凭据。
@@ -156,7 +162,7 @@ open LiveTranslateBridge.xcodeproj    # 在 Xcode 里运行
 
 推送到 main 或提交 PR 时，CI 只运行单元测试（`.github/workflows/ci.yml`）。推送 `v*` 标签会触发 `.github/workflows/release.yml`：先运行同一套测试，再构建、使用 Developer ID 签名并公证，最后发布 GitHub Release 并更新 Homebrew tap。标签中的版本号必须与工程中的 `MARKETING_VERSION` 一致。
 
-应用内更新的 appcast 不进版本库：发布时 CI 用仓库 secret `SPARKLE_ED_PRIVATE_KEY` 给 zip 签名，随 Release 附上 `.zip.sparkle.json`；随后重新部署 GitHub Pages（`.github/workflows/pages.yml`），从全部 Release 生成 `https://hoobnn.github.io/livetranslate-bridge/appcast.xml`。删除某个 Release，它对应的更新条目也随之消失。
+应用内更新的 appcast 不进版本库：发布时 CI 用仓库 secret `SPARKLE_ED_PRIVATE_KEY` 给 zip 签名，随 Release 附上 `.zip.sparkle.json`；随后重新部署 GitHub Pages（`.github/workflows/pages.yml`），从全部 Release 生成 `https://hoobnn.github.io/verelay/appcast.xml`。删除某个 Release，它对应的更新条目也随之消失。
 
 ## 文档
 

@@ -6,6 +6,14 @@
 
 ## [未发布]
 
+## [1.3.0] - 2026-11-12
+
+### 变更
+
+- **全面更名为 Verelay**：应用、工程、安装包、项目主页和 Homebrew 包名统一更新。
+- **全新图标与宣传图**：以抽象 V 图形表达双向交流。
+- 保留应用身份与钥匙串服务名，继续使用已有设置、密钥、字幕历史和录音；旧版更新源保留兼容入口。
+
 ## [1.2.1] - 2026-10-31
 
 ### 安全
@@ -68,7 +76,8 @@
 - 流式文字只刷新正在输入的那一条字幕，不再让整块字幕板重绘。
 - 上行音频按字节控制积压，网络抖动时不再越积越多。
 
-[未发布]: https://github.com/hoobnn/livetranslate-bridge/compare/v1.1.1...HEAD
-[1.1.1]: https://github.com/hoobnn/livetranslate-bridge/releases/tag/v1.1.1
-[1.1.0]: https://github.com/hoobnn/livetranslate-bridge/releases/tag/v1.1.0
-[1.0.0]: https://github.com/hoobnn/livetranslate-bridge/releases/tag/v1.0.0
+[未发布]: https://github.com/hoobnn/verelay/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/hoobnn/verelay/compare/v1.2.1...v1.3.0
+[1.1.1]: https://github.com/hoobnn/verelay/releases/tag/v1.1.1
+[1.1.0]: https://github.com/hoobnn/verelay/releases/tag/v1.1.0
+[1.0.0]: https://github.com/hoobnn/verelay/releases/tag/v1.0.0
